@@ -7,32 +7,61 @@ package FrontEnd;
 
 import BackEnd.SO;
 import javax.swing.JOptionPane;
+import javax.swing.DefaultListModel;
 
 /**
  *
  * @author Administrador
  */
-public class Simulador extends javax.swing.JFrame {
-        
-    private SO so;
+public final class Simulador extends javax.swing.JFrame {
+
+    private final SO so;
+
     /**
      * Creates new form NewJFrame
      */
     public Simulador() {
         initComponents();
-        so = new SO();
-        int numero = 0;
-        do{
-            try{
-                numero = Integer.parseInt(JOptionPane.showInputDialog("Ingrese la cantidad de marcos en memoria:"));
-            }catch(NumberFormatException e){
-                numero = 0;
-            }
-            
-        }while(numero<1);
-        so.setCantMarcos(numero);
+        so = new SO(popUpNumero("Ingrese la cantidad de marcos en memoria:"));
     }
 
+    public int popUpNumero(String msg) {
+        int numero = 0;
+        do {
+            try {
+                numero = Integer.parseInt(JOptionPane.showInputDialog(msg));
+            } catch (NumberFormatException e) {
+                numero = 0;
+            }
+
+        } while (numero < 1);
+        return numero;
+    }
+
+  public void refreshLists(){
+      int tamanoRam = so.getRAM().getListaMarcos().size();
+      MainMemoryModel.clear();
+      for (int i = tamanoRam; i>0; i--){
+          BackEnd.pagina pagina = so.getRAM().getListaMarcos().get(tamanoRam - i).getPagProceso(); 
+          if( pagina != null){
+              MainMemoryModel.addElement(tamanoRam - i + " - Proceso." + pagina.getNumeroProceso() +"-"+ pagina.getNumeroPagina());
+          }else{
+               MainMemoryModel.addElement(tamanoRam - i + " - ");
+          }
+      }
+      
+      int tamanoDisco = so.getDisco().getListaPaginas().size();
+            VirtualMemoryModel.clear();
+      for (int i = tamanoDisco; i>0; i--){
+          BackEnd.pagina pagina = so.getDisco().getListaPaginas().get(tamanoDisco - i); 
+          if( pagina != null){
+             VirtualMemoryModel.addElement(tamanoDisco - i + " - Proceso." + pagina.getNumeroProceso() +"-"+ pagina.getNumeroPagina());
+          }else{
+              VirtualMemoryModel.addElement(tamanoDisco - i + " - ");
+          }
+      }
+  }  
+  
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -43,133 +72,139 @@ public class Simulador extends javax.swing.JFrame {
     private void initComponents() {
 
         Fondo = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        ListaProcesos = new javax.swing.JList<>();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        ListaProcesos1 = new javax.swing.JList<>();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        ListaProcesos2 = new javax.swing.JList<>();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
-        jLabel11 = new javax.swing.JLabel();
+        MMScrollPane = new javax.swing.JScrollPane();
+        MainMemoryModel = new DefaultListModel();
+        MainMemoryList = new javax.swing.JList<>();
+        VMScrollPane = new javax.swing.JScrollPane();
+        VirtualMemoryModel = new DefaultListModel();
+        VirtualMemoryList = new javax.swing.JList<>();
+        ProcessScrollPane = new javax.swing.JScrollPane();
+        ModeloProceso = new DefaultListModel();
+        ProcessesList = new javax.swing.JList<>();
+        MMTag = new javax.swing.JLabel();
+        ProcessTag = new javax.swing.JLabel();
+        VMTAg = new javax.swing.JLabel();
+        AddButton = new javax.swing.JButton();
+        TotalPagesTag = new javax.swing.JLabel();
+        TotalPages = new javax.swing.JLabel();
+        PagesVMTag = new javax.swing.JLabel();
+        PagesMMTag = new javax.swing.JLabel();
+        RunningTag = new javax.swing.JLabel();
+        PagesVM = new javax.swing.JLabel();
+        PagesMM = new javax.swing.JLabel();
+        Running = new javax.swing.JLabel();
+        RemoveButton = new javax.swing.JButton();
+        RunButton = new javax.swing.JButton();
+        NextPageButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Proyecto 2 SO - Maximiliano Casale, Gabriel De Lellis");
+        setResizable(false);
 
         Fondo.setBackground(new java.awt.Color(0, 0, 0));
 
-        ListaProcesos.setBackground(new java.awt.Color(0, 0, 0));
-        ListaProcesos.setForeground(new java.awt.Color(0, 204, 204));
-        ListaProcesos.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
-        jScrollPane1.setViewportView(ListaProcesos);
+        MainMemoryList.setModel(MainMemoryModel);
+        MainMemoryList.setBackground(new java.awt.Color(0, 0, 0));
+        MainMemoryList.setForeground(new java.awt.Color(0, 204, 204));
+        MMScrollPane.setViewportView(MainMemoryList);
 
-        ListaProcesos1.setBackground(new java.awt.Color(0, 0, 0));
-        ListaProcesos1.setForeground(new java.awt.Color(0, 204, 204));
-        ListaProcesos1.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
-        jScrollPane2.setViewportView(ListaProcesos1);
+        VirtualMemoryList.setModel(VirtualMemoryModel);
+        VirtualMemoryList.setBackground(new java.awt.Color(0, 0, 0));
+        VirtualMemoryList.setForeground(new java.awt.Color(0, 204, 204));
+        VMScrollPane.setViewportView(VirtualMemoryList);
 
-        ListaProcesos2.setBackground(new java.awt.Color(0, 0, 0));
-        ListaProcesos2.setForeground(new java.awt.Color(0, 204, 204));
-        ListaProcesos2.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
-        jScrollPane3.setViewportView(ListaProcesos2);
+        ProcessesList.setModel(ModeloProceso);
+        ProcessesList.setBackground(new java.awt.Color(0, 0, 0));
+        ProcessesList.setForeground(new java.awt.Color(0, 204, 204));
+        ProcessScrollPane.setViewportView(ProcessesList);
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(0, 204, 204));
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("Main Memory");
+        MMTag.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        MMTag.setForeground(new java.awt.Color(0, 204, 204));
+        MMTag.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        MMTag.setText("Main Memory");
 
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(0, 204, 204));
-        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel2.setText("Processes");
+        ProcessTag.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        ProcessTag.setForeground(new java.awt.Color(0, 204, 204));
+        ProcessTag.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        ProcessTag.setText("Processes");
 
-        jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(0, 204, 204));
-        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel3.setText("Virtual Memory");
+        VMTAg.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        VMTAg.setForeground(new java.awt.Color(0, 204, 204));
+        VMTAg.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        VMTAg.setText("Virtual Memory");
 
-        jButton1.setBackground(new java.awt.Color(102, 102, 102));
-        jButton1.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(0, 204, 204));
-        jButton1.setText("Add");
-        jButton1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jButton1.setContentAreaFilled(false);
-        jButton1.setMaximumSize(new java.awt.Dimension(79, 25));
-        jButton1.setMinimumSize(new java.awt.Dimension(79, 25));
-        jButton1.setPreferredSize(new java.awt.Dimension(79, 25));
-
-        jButton2.setBackground(new java.awt.Color(102, 102, 102));
-        jButton2.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
-        jButton2.setForeground(new java.awt.Color(0, 204, 204));
-        jButton2.setText("Remove");
-        jButton2.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jButton2.setContentAreaFilled(false);
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        AddButton.setBackground(new java.awt.Color(0, 0, 0));
+        AddButton.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
+        AddButton.setForeground(new java.awt.Color(0, 204, 204));
+        AddButton.setText("Add");
+        AddButton.setToolTipText("Add a new process to the system");
+        AddButton.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
+        AddButton.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        AddButton.setMaximumSize(new java.awt.Dimension(79, 25));
+        AddButton.setMinimumSize(new java.awt.Dimension(79, 25));
+        AddButton.setPreferredSize(new java.awt.Dimension(79, 25));
+        AddButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                AddButtonActionPerformed(evt);
             }
         });
 
-        jButton3.setBackground(new java.awt.Color(102, 102, 102));
-        jButton3.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
-        jButton3.setForeground(new java.awt.Color(0, 204, 204));
-        jButton3.setText("Next Page");
-        jButton3.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jButton3.setContentAreaFilled(false);
+        TotalPagesTag.setForeground(new java.awt.Color(0, 204, 204));
+        TotalPagesTag.setText("Total Pages:");
 
-        jButton4.setBackground(new java.awt.Color(102, 102, 102));
-        jButton4.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
-        jButton4.setForeground(new java.awt.Color(0, 204, 204));
-        jButton4.setText("Run");
-        jButton4.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jButton4.setContentAreaFilled(false);
+        TotalPages.setForeground(new java.awt.Color(0, 204, 204));
+        TotalPages.setText("num");
 
-        jLabel4.setForeground(new java.awt.Color(0, 204, 204));
-        jLabel4.setText("Total Pages:");
+        PagesVMTag.setForeground(new java.awt.Color(0, 204, 204));
+        PagesVMTag.setText("Pages in VM:");
 
-        jLabel5.setForeground(new java.awt.Color(0, 204, 204));
-        jLabel5.setText("jLabel4");
+        PagesMMTag.setForeground(new java.awt.Color(0, 204, 204));
+        PagesMMTag.setText("Pages in MM:");
 
-        jLabel6.setForeground(new java.awt.Color(0, 204, 204));
-        jLabel6.setText("Pages in VM:");
+        RunningTag.setForeground(new java.awt.Color(0, 204, 204));
+        RunningTag.setText("Running: ");
 
-        jLabel7.setForeground(new java.awt.Color(0, 204, 204));
-        jLabel7.setText("Pages in MM:");
+        PagesVM.setForeground(new java.awt.Color(0, 204, 204));
+        PagesVM.setText("num1");
 
-        jLabel8.setForeground(new java.awt.Color(0, 204, 204));
-        jLabel8.setText("Running: ");
+        PagesMM.setForeground(new java.awt.Color(0, 204, 204));
+        PagesMM.setText("num2");
 
-        jLabel9.setForeground(new java.awt.Color(0, 204, 204));
-        jLabel9.setText("jLabel4");
+        Running.setForeground(new java.awt.Color(0, 204, 204));
+        Running.setText("num3");
 
-        jLabel10.setForeground(new java.awt.Color(0, 204, 204));
-        jLabel10.setText("jLabel4");
+        RemoveButton.setBackground(new java.awt.Color(0, 0, 0));
+        RemoveButton.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
+        RemoveButton.setForeground(new java.awt.Color(0, 204, 204));
+        RemoveButton.setText("Remove");
+        RemoveButton.setToolTipText("Add a new process to the system");
+        RemoveButton.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
+        RemoveButton.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        RemoveButton.setMaximumSize(new java.awt.Dimension(79, 25));
+        RemoveButton.setMinimumSize(new java.awt.Dimension(79, 25));
+        RemoveButton.setPreferredSize(new java.awt.Dimension(79, 25));
 
-        jLabel11.setForeground(new java.awt.Color(0, 204, 204));
-        jLabel11.setText("jLabel4");
+        RunButton.setBackground(new java.awt.Color(0, 0, 0));
+        RunButton.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
+        RunButton.setForeground(new java.awt.Color(0, 204, 204));
+        RunButton.setText("Run");
+        RunButton.setToolTipText("Add a new process to the system");
+        RunButton.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
+        RunButton.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        RunButton.setMaximumSize(new java.awt.Dimension(79, 25));
+        RunButton.setMinimumSize(new java.awt.Dimension(79, 25));
+        RunButton.setPreferredSize(new java.awt.Dimension(79, 25));
+
+        NextPageButton.setBackground(new java.awt.Color(0, 0, 0));
+        NextPageButton.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
+        NextPageButton.setForeground(new java.awt.Color(0, 204, 204));
+        NextPageButton.setText("Next Page");
+        NextPageButton.setToolTipText("Add a new process to the system");
+        NextPageButton.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
+        NextPageButton.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        NextPageButton.setMaximumSize(new java.awt.Dimension(79, 25));
+        NextPageButton.setMinimumSize(new java.awt.Dimension(79, 25));
+        NextPageButton.setPreferredSize(new java.awt.Dimension(79, 25));
 
         javax.swing.GroupLayout FondoLayout = new javax.swing.GroupLayout(Fondo);
         Fondo.setLayout(FondoLayout);
@@ -179,118 +214,111 @@ public class Simulador extends javax.swing.JFrame {
                 .addGap(25, 25, 25)
                 .addGroup(FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(FondoLayout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addGroup(FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(FondoLayout.createSequentialGroup()
-                                .addGroup(FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addGroup(FondoLayout.createSequentialGroup()
-                                        .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addGroup(FondoLayout.createSequentialGroup()
-                                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGap(18, 18, 18)
-                                            .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, FondoLayout.createSequentialGroup()
-                                            .addGroup(FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                                .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addGap(18, 18, 18)
-                                            .addGroup(FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(101, 101, 101))
-                            .addGroup(FondoLayout.createSequentialGroup()
-                                .addGroup(FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jButton4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jButton2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addGap(100, 100, 100)))
+                        .addComponent(ProcessTag, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(MMTag, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(FondoLayout.createSequentialGroup()
                         .addGroup(FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane2)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, FondoLayout.createSequentialGroup()
-                        .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 216, Short.MAX_VALUE)
-                        .addGap(100, 100, 100)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, FondoLayout.createSequentialGroup()
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(100, 100, 100)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(FondoLayout.createSequentialGroup()
+                                .addGroup(FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(ProcessScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(NextPageButton, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGroup(FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(RunButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(RemoveButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(AddButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                                .addGap(100, 100, 100))
+                            .addGroup(FondoLayout.createSequentialGroup()
+                                .addGroup(FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(FondoLayout.createSequentialGroup()
+                                        .addGroup(FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                            .addComponent(PagesVMTag, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(PagesMMTag, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGap(18, 18, 18)
+                                        .addGroup(FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(PagesVM, javax.swing.GroupLayout.DEFAULT_SIZE, 112, Short.MAX_VALUE)
+                                            .addComponent(PagesMM, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                    .addGroup(FondoLayout.createSequentialGroup()
+                                        .addComponent(RunningTag, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(Running, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addGroup(FondoLayout.createSequentialGroup()
+                                        .addComponent(TotalPagesTag, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(TotalPages, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addGroup(FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(VMScrollPane)
+                            .addComponent(MMScrollPane)
+                            .addComponent(VMTAg, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addGap(25, 25, 25))
         );
         FondoLayout.setVerticalGroup(
             FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(FondoLayout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(25, 25, 25)
                 .addGroup(FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(ProcessTag, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(MMTag, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 311, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 311, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGroup(FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, FondoLayout.createSequentialGroup()
+                    .addComponent(ProcessScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 311, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(MMScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 311, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(FondoLayout.createSequentialGroup()
                         .addGap(5, 5, 5)
-                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(VMTAg, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(VMScrollPane))
                     .addGroup(FondoLayout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(AddButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2)
+                        .addComponent(RemoveButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton4)
+                        .addComponent(RunButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton3)
+                        .addComponent(NextPageButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(TotalPages, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(TotalPagesTag, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(PagesVMTag, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(PagesVM, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(PagesMMTag, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(PagesMM, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(RunningTag, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(Running, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(25, 25, 25))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(Fondo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(Fondo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(Fondo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(Fondo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+    private void AddButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddButtonActionPerformed
+        so.createProcess(popUpNumero("Ingrese la cantidad de paginas de este Proceso"));
+        ModeloProceso.addElement(so.getListaProcesos().get(so.getUbicadorProcesos() - 1).getNombre());
+        refreshLists();
+    }//GEN-LAST:event_AddButtonActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -304,20 +332,18 @@ public class Simulador extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Simulador.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Simulador.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Simulador.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(Simulador.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
         //</editor-fold>
 
+        //</editor-fold>
+        //</editor-fold>
+
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 new Simulador().setVisible(true);
             }
@@ -325,27 +351,30 @@ public class Simulador extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton AddButton;
     private javax.swing.JPanel Fondo;
-    private javax.swing.JList<String> ListaProcesos;
-    private javax.swing.JList<String> ListaProcesos1;
-    private javax.swing.JList<String> ListaProcesos2;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane MMScrollPane;
+    private javax.swing.JLabel MMTag;
+    private javax.swing.JList<String> MainMemoryList;
+    private javax.swing.DefaultListModel MainMemoryModel;
+    private javax.swing.JButton NextPageButton;
+    private javax.swing.JLabel PagesMM;
+    private javax.swing.JLabel PagesMMTag;
+    private javax.swing.JLabel PagesVM;
+    private javax.swing.JLabel PagesVMTag;
+    private javax.swing.JScrollPane ProcessScrollPane;
+    private javax.swing.JLabel ProcessTag;
+    private javax.swing.JList<String> ProcessesList;
+    private javax.swing.DefaultListModel ModeloProceso;
+    private javax.swing.JButton RemoveButton;
+    private javax.swing.JButton RunButton;
+    private javax.swing.JLabel Running;
+    private javax.swing.JLabel RunningTag;
+    private javax.swing.JLabel TotalPages;
+    private javax.swing.JLabel TotalPagesTag;
+    private javax.swing.JScrollPane VMScrollPane;
+    private javax.swing.JLabel VMTAg;
+    private javax.swing.JList<String> VirtualMemoryList;
+    private javax.swing.DefaultListModel VirtualMemoryModel;
     // End of variables declaration//GEN-END:variables
 }

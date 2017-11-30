@@ -15,13 +15,16 @@ import java.util.ArrayList;
  * @author Administrador
  */
 public class proceso {
+    private String nombre;
     private ArrayList<pagina> listaDePaginas;
     private boolean enEjecucion;
 
-    public proceso(int a) {
+    public proceso(int cantidadPaginas, int numProceso) {
+        nombre = "Proceso." + numProceso;
+        listaDePaginas = new ArrayList<>();
         enEjecucion = false;
-        for(int i = a; i > 0; i--){
-            listaDePaginas.add(new pagina(a-i));
+        for(int i = cantidadPaginas; i > 0; i--){
+            listaDePaginas.add(new pagina(cantidadPaginas-i, numProceso));
         }
     }
 
@@ -39,6 +42,14 @@ public class proceso {
 
     public boolean isEnEjecucion() {
         return enEjecucion;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
     
 }

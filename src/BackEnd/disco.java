@@ -13,4 +13,18 @@ import java.util.ArrayList;
  */
 public class disco {
     private ArrayList<pagina> listaPaginas;
+    
+    public  disco(){
+        listaPaginas = new ArrayList<>();
+    }
+
+    public ArrayList<pagina> getListaPaginas() {
+        return listaPaginas;
+    }
+
+    public void setListaPaginas(ArrayList<pagina> listaPaginas) {
+        this.listaPaginas = listaPaginas;
+    }
+    
+    
 }

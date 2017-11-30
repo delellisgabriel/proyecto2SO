@@ -11,8 +11,27 @@ package BackEnd;
  */
 public class pagina {
     private int numeroPagina;
+    private int numeroProceso;
 
-    public pagina(int numeroPagina) {
+    public pagina(int numeroPagina, int numProceso) {
         this.numeroPagina = numeroPagina;
     }
+
+    public int getNumeroPagina() {
+        return numeroPagina;
+    }
+
+    public void setNumeroPagina(int numeroPagina) {
+        this.numeroPagina = numeroPagina;
+    }
+
+    public int getNumeroProceso() {
+        return numeroProceso;
+    }
+
+    public void setNumeroProceso(int numeroProceso) {
+        this.numeroProceso = numeroProceso;
+    }
+    
+    
 }
