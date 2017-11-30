@@ -30,7 +30,7 @@
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="Fondo" alignment="0" max="32767" attributes="0"/>
+          <Component id="Fondo" alignment="0" max="-2" attributes="0"/>
       </Group>
     </DimensionLayout>
   </Layout>
@@ -48,60 +48,46 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" attributes="0">
-                          <Component id="ProcessTag" min="-2" pref="209" max="-2" attributes="0"/>
-                          <EmptySpace max="32767" attributes="0"/>
-                          <Component id="MMTag" min="-2" pref="209" max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="102" attributes="0">
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" attributes="0">
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="ProcessScrollPane" alignment="1" min="-2" pref="209" max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="1" attributes="0">
-                                          <Component id="NextPageButton" alignment="1" min="-2" pref="209" max="-2" attributes="0"/>
-                                          <Group type="103" groupAlignment="1" attributes="0">
-                                              <Component id="RunButton" alignment="0" max="32767" attributes="0"/>
-                                              <Component id="RemoveButton" alignment="0" max="32767" attributes="0"/>
-                                              <Component id="AddButton" max="32767" attributes="0"/>
-                                          </Group>
-                                      </Group>
-                                  </Group>
-                                  <EmptySpace min="100" pref="100" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="RunButton" alignment="0" max="32767" attributes="0"/>
+                          <Component id="RemoveButton" alignment="0" max="32767" attributes="0"/>
+                          <Component id="AddButton" alignment="1" max="32767" attributes="0"/>
+                          <Component id="NextPageButton" max="32767" attributes="0"/>
+                          <Group type="102" attributes="0">
+                              <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                  <Component id="TotalPagesTag" min="-2" pref="110" max="-2" attributes="0"/>
+                                  <Component id="PagesMMTag" alignment="0" min="-2" pref="110" max="-2" attributes="0"/>
+                                  <Component id="PagesVMTag" alignment="0" min="-2" pref="110" max="-2" attributes="0"/>
+                                  <Component id="RunningTag" alignment="0" min="-2" pref="110" max="-2" attributes="0"/>
                               </Group>
-                              <Group type="102" attributes="0">
-                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                      <Group type="102" alignment="0" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" attributes="0">
                                           <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                              <Component id="PagesVMTag" alignment="0" min="-2" pref="79" max="-2" attributes="0"/>
-                                              <Component id="PagesMMTag" alignment="0" min="-2" pref="79" max="-2" attributes="0"/>
+                                              <Component id="PagesVM" alignment="1" min="-2" pref="110" max="-2" attributes="0"/>
+                                              <Component id="PagesMM" min="-2" pref="110" max="-2" attributes="0"/>
                                           </Group>
-                                          <EmptySpace type="separate" max="-2" attributes="0"/>
-                                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                              <Component id="PagesVM" pref="112" max="32767" attributes="0"/>
-                                              <Component id="PagesMM" max="32767" attributes="0"/>
-                                          </Group>
-                                      </Group>
-                                      <Group type="102" attributes="0">
-                                          <Component id="RunningTag" min="-2" pref="79" max="-2" attributes="0"/>
-                                          <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
-                                          <Component id="Running" max="32767" attributes="0"/>
-                                      </Group>
-                                      <Group type="102" alignment="0" attributes="0">
-                                          <Component id="TotalPagesTag" min="-2" pref="79" max="-2" attributes="0"/>
-                                          <EmptySpace type="separate" max="-2" attributes="0"/>
-                                          <Component id="TotalPages" min="-2" pref="112" max="-2" attributes="0"/>
+                                          <Component id="TotalPages" min="-2" pref="110" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
-                                  <EmptySpace max="32767" attributes="0"/>
+                                  <Group type="102" alignment="1" attributes="0">
+                                      <EmptySpace min="-2" pref="7" max="-2" attributes="0"/>
+                                      <Component id="Running" min="-2" pref="110" max="-2" attributes="0"/>
+                                  </Group>
                               </Group>
+                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           </Group>
-                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="VMScrollPane" alignment="0" max="32767" attributes="0"/>
-                              <Component id="MMScrollPane" max="32767" attributes="0"/>
-                              <Component id="VMTAg" max="32767" attributes="0"/>
-                          </Group>
+                          <Component id="ProcessScrollPane" alignment="1" pref="0" max="32767" attributes="0"/>
                       </Group>
+                      <Component id="ProcessTag" alignment="0" min="-2" pref="209" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace min="100" pref="100" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Component id="VMScrollPane" alignment="0" max="32767" attributes="0"/>
+                      <Component id="MMScrollPane" max="32767" attributes="0"/>
+                      <Component id="MMTag" alignment="0" min="-2" pref="260" max="-2" attributes="0"/>
+                      <Component id="VMTAg" alignment="0" min="-2" pref="260" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
               </Group>
@@ -137,19 +123,19 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="NextPageButton" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="TotalPages" min="-2" pref="24" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
                               <Component id="TotalPagesTag" min="-2" pref="24" max="-2" attributes="0"/>
+                              <Component id="TotalPages" min="-2" pref="24" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="PagesVMTag" alignment="3" min="-2" pref="24" max="-2" attributes="0"/>
-                              <Component id="PagesVM" alignment="3" min="-2" pref="24" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Component id="PagesVMTag" min="-2" pref="24" max="-2" attributes="0"/>
+                              <Component id="PagesVM" min="-2" pref="24" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="PagesMMTag" alignment="3" min="-2" pref="24" max="-2" attributes="0"/>
-                              <Component id="PagesMM" alignment="3" min="-2" pref="24" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Component id="PagesMMTag" min="-2" pref="24" max="-2" attributes="0"/>
+                              <Component id="PagesMM" min="-2" pref="24" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
@@ -239,6 +225,9 @@
                   <StringArray count="0"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="ProcessesListMouseClicked"/>
+              </Events>
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_CreateCodePre" type="java.lang.String" value="ModeloProceso = new DefaultListModel();"/>
                 <AuxValue name="JavaCodeGenerator_DeclarationPost" type="java.lang.String" value="private javax.swing.DefaultListModel ModeloProceso;"/>
@@ -334,7 +323,6 @@
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="cc" green="cc" red="0" type="rgb"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="num"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="PagesVMTag">
@@ -366,7 +354,6 @@
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="cc" green="cc" red="0" type="rgb"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="num1"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="PagesMM">
@@ -374,7 +361,6 @@
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="cc" green="cc" red="0" type="rgb"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="num2"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="Running">
@@ -382,7 +368,6 @@
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="cc" green="cc" red="0" type="rgb"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="num3"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="RemoveButton">
@@ -418,6 +403,9 @@
               <Dimension value="[79, 25]"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="RemoveButtonActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="RunButton">
           <Properties>

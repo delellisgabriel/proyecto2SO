@@ -38,30 +38,29 @@ public final class Simulador extends javax.swing.JFrame {
         return numero;
     }
 
-  public void refreshLists(){
-      int tamanoRam = so.getRAM().getListaMarcos().size();
-      MainMemoryModel.clear();
-      for (int i = tamanoRam; i>0; i--){
-          BackEnd.pagina pagina = so.getRAM().getListaMarcos().get(tamanoRam - i).getPagProceso(); 
-          if( pagina != null){
-              MainMemoryModel.addElement(tamanoRam - i + " - Proceso." + pagina.getNumeroProceso() +"-"+ pagina.getNumeroPagina());
-          }else{
-               MainMemoryModel.addElement(tamanoRam - i + " - ");
-          }
-      }
-      
-      int tamanoDisco = so.getDisco().getListaPaginas().size();
-            VirtualMemoryModel.clear();
-      for (int i = tamanoDisco; i>0; i--){
-          BackEnd.pagina pagina = so.getDisco().getListaPaginas().get(tamanoDisco - i); 
-          if( pagina != null){
-             VirtualMemoryModel.addElement(tamanoDisco - i + " - Proceso." + pagina.getNumeroProceso() +"-"+ pagina.getNumeroPagina());
-          }else{
-              VirtualMemoryModel.addElement(tamanoDisco - i + " - ");
-          }
-      }
-  }  
-  
+    public void refreshLists() {
+        int tamanoRam = so.getRAM().getListaMarcos().size();
+        MainMemoryModel.clear();
+        for (int i = tamanoRam; i > 0; i--) {
+            BackEnd.pagina pagina = so.getRAM().getListaMarcos().get(tamanoRam - i).getPagProceso();
+            if (pagina != null) {
+                MainMemoryModel.addElement(tamanoRam - i + " - Proceso." + pagina.getNumeroProceso() + "-" + pagina.getNumeroPagina());
+            } else {
+                MainMemoryModel.addElement(tamanoRam - i + " - ");
+            }
+        }
+        int tamanoDisco = so.getDisco().getListaPaginas().size();
+        VirtualMemoryModel.clear();
+        for (int i = tamanoDisco; i > 0; i--) {
+            BackEnd.pagina pagina = so.getDisco().getListaPaginas().get(tamanoDisco - i);
+            if (pagina != null) {
+                VirtualMemoryModel.addElement(tamanoDisco - i + " - Proceso." + pagina.getNumeroProceso() + "-" + pagina.getNumeroPagina());
+            } else {
+                VirtualMemoryModel.addElement(tamanoDisco - i + " - ");
+            }
+        }
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -116,6 +115,11 @@ public final class Simulador extends javax.swing.JFrame {
         ProcessesList.setModel(ModeloProceso);
         ProcessesList.setBackground(new java.awt.Color(0, 0, 0));
         ProcessesList.setForeground(new java.awt.Color(0, 204, 204));
+        ProcessesList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                ProcessesListMouseClicked(evt);
+            }
+        });
         ProcessScrollPane.setViewportView(ProcessesList);
 
         MMTag.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
@@ -153,7 +157,6 @@ public final class Simulador extends javax.swing.JFrame {
         TotalPagesTag.setText("Total Pages:");
 
         TotalPages.setForeground(new java.awt.Color(0, 204, 204));
-        TotalPages.setText("num");
 
         PagesVMTag.setForeground(new java.awt.Color(0, 204, 204));
         PagesVMTag.setText("Pages in VM:");
@@ -165,13 +168,10 @@ public final class Simulador extends javax.swing.JFrame {
         RunningTag.setText("Running: ");
 
         PagesVM.setForeground(new java.awt.Color(0, 204, 204));
-        PagesVM.setText("num1");
 
         PagesMM.setForeground(new java.awt.Color(0, 204, 204));
-        PagesMM.setText("num2");
 
         Running.setForeground(new java.awt.Color(0, 204, 204));
-        Running.setText("num3");
 
         RemoveButton.setBackground(new java.awt.Color(0, 0, 0));
         RemoveButton.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
@@ -183,6 +183,11 @@ public final class Simulador extends javax.swing.JFrame {
         RemoveButton.setMaximumSize(new java.awt.Dimension(79, 25));
         RemoveButton.setMinimumSize(new java.awt.Dimension(79, 25));
         RemoveButton.setPreferredSize(new java.awt.Dimension(79, 25));
+        RemoveButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                RemoveButtonActionPerformed(evt);
+            }
+        });
 
         RunButton.setBackground(new java.awt.Color(0, 0, 0));
         RunButton.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
@@ -213,45 +218,37 @@ public final class Simulador extends javax.swing.JFrame {
             .addGroup(FondoLayout.createSequentialGroup()
                 .addGap(25, 25, 25)
                 .addGroup(FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(FondoLayout.createSequentialGroup()
-                        .addComponent(ProcessTag, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(MMTag, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(FondoLayout.createSequentialGroup()
-                        .addGroup(FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(FondoLayout.createSequentialGroup()
-                                .addGroup(FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(ProcessScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(NextPageButton, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGroup(FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(RunButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(RemoveButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(AddButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                                .addGap(100, 100, 100))
-                            .addGroup(FondoLayout.createSequentialGroup()
-                                .addGroup(FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addGroup(FondoLayout.createSequentialGroup()
+                    .addGroup(FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(RunButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(RemoveButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(AddButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(NextPageButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(FondoLayout.createSequentialGroup()
+                            .addGroup(FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(TotalPagesTag, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(PagesMMTag, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(PagesVMTag, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(RunningTag, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(FondoLayout.createSequentialGroup()
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addGroup(FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addGroup(FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                            .addComponent(PagesVMTag, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(PagesMMTag, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGap(18, 18, 18)
-                                        .addGroup(FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(PagesVM, javax.swing.GroupLayout.DEFAULT_SIZE, 112, Short.MAX_VALUE)
-                                            .addComponent(PagesMM, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                                    .addGroup(FondoLayout.createSequentialGroup()
-                                        .addComponent(RunningTag, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(Running, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                    .addGroup(FondoLayout.createSequentialGroup()
-                                        .addComponent(TotalPagesTag, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(TotalPages, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                        .addGroup(FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(VMScrollPane)
-                            .addComponent(MMScrollPane)
-                            .addComponent(VMTAg, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                                            .addComponent(PagesVM, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(PagesMM, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(TotalPages, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, FondoLayout.createSequentialGroup()
+                                    .addGap(7, 7, 7)
+                                    .addComponent(Running, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGap(0, 0, Short.MAX_VALUE))
+                        .addComponent(ProcessScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                    .addComponent(ProcessTag, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(100, 100, 100)
+                .addGroup(FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(VMScrollPane)
+                    .addComponent(MMScrollPane)
+                    .addComponent(MMTag, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(VMTAg, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(25, 25, 25))
         );
         FondoLayout.setVerticalGroup(
@@ -281,15 +278,15 @@ public final class Simulador extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(NextPageButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(TotalPages, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(TotalPagesTag, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(TotalPagesTag, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(TotalPages, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addGroup(FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(PagesVMTag, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(PagesVM, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addGroup(FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(PagesMMTag, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(PagesMM, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -307,7 +304,7 @@ public final class Simulador extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(Fondo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(Fondo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -315,9 +312,33 @@ public final class Simulador extends javax.swing.JFrame {
 
     private void AddButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddButtonActionPerformed
         so.createProcess(popUpNumero("Ingrese la cantidad de paginas de este Proceso"));
-        ModeloProceso.addElement(so.getListaProcesos().get(so.getUbicadorProcesos() - 1).getNombre());
+        ModeloProceso.addElement(so.getListaProcesos().get(so.getListaProcesos().size() - 1).getNombre());
         refreshLists();
     }//GEN-LAST:event_AddButtonActionPerformed
+
+    private void ProcessesListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ProcessesListMouseClicked
+        int selected = Integer.parseInt(ProcessesList.getSelectedValue().substring(8));
+        if (selected != -1) {
+            BackEnd.proceso proceso = so.getListaProcesos().get(selected);
+            TotalPages.setText(Integer.toString(so.datosProceso(selected)[0]));
+            PagesMM.setText(Integer.toString(so.datosProceso(selected)[1]));
+            PagesVM.setText(Integer.toString(so.datosProceso(selected)[2]));
+            if (so.datosProceso(selected)[3] == 1) {
+                Running.setText("True");
+            } else {
+                Running.setText("False");
+            }
+        }
+    }//GEN-LAST:event_ProcessesListMouseClicked
+
+    private void RemoveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RemoveButtonActionPerformed
+        if (ProcessesList.getSelectedValue() != null) {
+            int numProceso = Integer.parseInt(ProcessesList.getSelectedValue().substring(8));
+            ModeloProceso.remove(ProcessesList.getSelectedIndex());
+            so.terminateProcess(numProceso);
+            refreshLists();
+        }
+    }//GEN-LAST:event_RemoveButtonActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */

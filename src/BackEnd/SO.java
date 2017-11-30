@@ -29,7 +29,7 @@ public class SO {
     public void createProcess(int paginas) {
         proceso proceso = new proceso(paginas, ubicadorProcesos);
         listaProcesos.add(proceso);
-        ubicadorProcesos++;
+        ubicadorProcesos = ubicadorProcesos + 1;
         for (int i = paginas; i > 0; i--) {
             if (RAM.isFull()) {
                 disco.getListaPaginas().add(proceso.getListaDePaginas().get(paginas - i));
@@ -42,6 +42,52 @@ public class SO {
                 }
             }
         }
+    }
+
+    public int[] datosProceso(int numProceso) {
+        proceso proceso = listaProcesos.get(numProceso);
+        int[] datos = new int[4];
+        datos[0] = proceso.getListaDePaginas().size(); // Total de paginas
+        int tamanoRAM = RAM.getListaMarcos().size();
+        datos[1] = 0; // paginas en RAM
+        for (int i = tamanoRAM; i > 0; i--) {
+            if (RAM.getListaMarcos().get(tamanoRAM - i).getPagProceso() != null) {
+                if (RAM.getListaMarcos().get(tamanoRAM - i).getPagProceso().getNumeroProceso() == numProceso) {
+                    datos[1]++;
+                }
+            }
+        }//Paginas en Memoria Principal
+        int tamanoDisco = disco.getListaPaginas().size();
+        datos[2] = 0;
+        for (int i = tamanoDisco; i > 0; i--) {
+            if (disco.getListaPaginas().get(tamanoDisco - i).getNumeroProceso() == numProceso) {
+                datos[2]++;
+            }
+        } //Paginas en Memoria Virttual
+        if (proceso.isEnEjecucion()) {
+            datos[3] = 1;
+        } else {
+            datos[3] = 0;
+        } //Estado del proceso
+        return datos;
+    }
+
+    public void terminateProcess(int selected) {
+        int tamanoRAM = RAM.getListaMarcos().size();
+        for (int i = tamanoRAM; i > 0; i--) {
+            if (RAM.getListaMarcos().get(i - 1).getPagProceso() != null) {
+                if (RAM.getListaMarcos().get(i - 1).getPagProceso().getNumeroProceso() == selected) {
+                    RAM.getListaMarcos().get(i-1).setPagProceso(null);
+                }
+            }
+        }//Paginas en Memoria Principal
+        int tamanoDisco = disco.getListaPaginas().size();
+        for (int i = tamanoDisco; i > 0; i--) {
+            if (disco.getListaPaginas().get(i - 1).getNumeroProceso() == selected) {
+                disco.getListaPaginas().remove(i - 1);
+            }
+        }
+        listaProcesos.set(selected, null);
     }
 
     public void setCantMarcos(int numero) {

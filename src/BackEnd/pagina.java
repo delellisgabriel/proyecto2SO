@@ -15,6 +15,7 @@ public class pagina {
 
     public pagina(int numeroPagina, int numProceso) {
         this.numeroPagina = numeroPagina;
+        this.numeroProceso = numProceso;
     }
 
     public int getNumeroPagina() {
