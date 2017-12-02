@@ -440,6 +440,9 @@
               <Dimension value="[79, 25]"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="RunButtonActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="NextPageButton">
           <Properties>
@@ -474,6 +477,9 @@
               <Dimension value="[79, 25]"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="NextPageButtonActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

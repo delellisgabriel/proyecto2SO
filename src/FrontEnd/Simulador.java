@@ -6,6 +6,7 @@
 package FrontEnd;
 
 import BackEnd.SO;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.DefaultListModel;
 
@@ -22,14 +23,26 @@ public final class Simulador extends javax.swing.JFrame {
      */
     public Simulador() {
         initComponents();
-        so = new SO(popUpNumero("Ingrese la cantidad de marcos en memoria:"));
+        so = new SO(popUpNumero("Ingrese la cantidad de marcos en memoria:", 0));
     }
 
-    public int popUpNumero(String msg) {
+    public int popUpNumero(String msg, int condicion) {
         int numero = 0;
         do {
             try {
-                numero = Integer.parseInt(JOptionPane.showInputDialog(msg));
+                String input = JOptionPane.showInputDialog(msg);
+                if (input == null) {
+                    switch (condicion) {
+                        case 0: //cancelar memoria
+                            System.exit(0);
+                            break;
+                        case 1: //cancelar proceso
+                            return 0;
+                        case 2: //terminar secuencia
+                            return -1;
+                    }
+                }
+                numero = Integer.parseInt(input);
             } catch (NumberFormatException e) {
                 numero = 0;
             }
@@ -199,6 +212,11 @@ public final class Simulador extends javax.swing.JFrame {
         RunButton.setMaximumSize(new java.awt.Dimension(79, 25));
         RunButton.setMinimumSize(new java.awt.Dimension(79, 25));
         RunButton.setPreferredSize(new java.awt.Dimension(79, 25));
+        RunButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                RunButtonActionPerformed(evt);
+            }
+        });
 
         NextPageButton.setBackground(new java.awt.Color(0, 0, 0));
         NextPageButton.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
@@ -210,6 +228,11 @@ public final class Simulador extends javax.swing.JFrame {
         NextPageButton.setMaximumSize(new java.awt.Dimension(79, 25));
         NextPageButton.setMinimumSize(new java.awt.Dimension(79, 25));
         NextPageButton.setPreferredSize(new java.awt.Dimension(79, 25));
+        NextPageButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                NextPageButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout FondoLayout = new javax.swing.GroupLayout(Fondo);
         Fondo.setLayout(FondoLayout);
@@ -311,22 +334,54 @@ public final class Simulador extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void AddButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddButtonActionPerformed
-        so.createProcess(popUpNumero("Ingrese la cantidad de paginas de este Proceso"));
-        ModeloProceso.addElement(so.getListaProcesos().get(so.getListaProcesos().size() - 1).getNombre());
-        refreshLists();
+        int cantPag = popUpNumero("Ingrese la cantidad de paginas de este Proceso", 1);
+        if (cantPag != 0) {
+            so.createProcess(cantPag);
+            int result = JOptionPane.showConfirmDialog(null, "Quieres definir un orden de ejecucion?", null, JOptionPane.YES_NO_OPTION);
+            BackEnd.proceso p = so.getListaProcesos().get(so.getListaProcesos().size() - 1);
+            ArrayList<Integer> orden = new ArrayList<>();
+            if (result == JOptionPane.YES_OPTION) {
+                boolean condicion = true;
+                while (condicion) {
+                    int numPag = popUpNumero("Ingrese el numero de pagina de la secuencia: Desde 1 a " + cantPag + "\n Oprima Cancel para terminar", 2);
+                    if (numPag != -1) {
+                        if (numPag <= cantPag) {
+                            orden.add(numPag - 1);
+                        } else {
+                            JOptionPane.showMessageDialog(null, "El numero no puede ser mayor que la cantidad de paginas!");
+                        }
+                    } else {
+                        if (orden.size() >= cantPag) {
+                            condicion = false;
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Faltan paginas por agregar, continue con la secuencia!");
+                        }
+                    }
+                }
+                p.defineOrder(orden);
+            } else {
+                p.defineOrder();
+            }
+            ModeloProceso.addElement(so.getListaProcesos().get(so.getListaProcesos().size() - 1).getNombre());
+            refreshLists();
+        }
     }//GEN-LAST:event_AddButtonActionPerformed
 
     private void ProcessesListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ProcessesListMouseClicked
-        int selected = Integer.parseInt(ProcessesList.getSelectedValue().substring(8));
-        if (selected != -1) {
-            BackEnd.proceso proceso = so.getListaProcesos().get(selected);
-            TotalPages.setText(Integer.toString(so.datosProceso(selected)[0]));
-            PagesMM.setText(Integer.toString(so.datosProceso(selected)[1]));
-            PagesVM.setText(Integer.toString(so.datosProceso(selected)[2]));
-            if (so.datosProceso(selected)[3] == 1) {
-                Running.setText("True");
-            } else {
-                Running.setText("False");
+        if (ProcessesList.getSelectedValue() != null) {
+            int selected = Integer.parseInt(ProcessesList.getSelectedValue().substring(8));
+            if (selected != -1) {
+                BackEnd.proceso proceso = so.getListaProcesos().get(selected);
+                TotalPages.setText(Integer.toString(so.datosProceso(selected)[0]));
+                PagesMM.setText(Integer.toString(so.datosProceso(selected)[1]));
+                PagesVM.setText(Integer.toString(so.datosProceso(selected)[2]));
+                if (so.datosProceso(selected)[3] == 1) {
+                    System.out.println(so.getIntel().getPaginaEjecutando().getNumeroPagina());
+                    String enExec = "Pagina - " + so.getIntel().getPaginaEjecutando().getNumeroPagina();
+                    Running.setText(enExec);
+                } else {
+                    Running.setText("False");
+                }
             }
         }
     }//GEN-LAST:event_ProcessesListMouseClicked
@@ -339,6 +394,20 @@ public final class Simulador extends javax.swing.JFrame {
             refreshLists();
         }
     }//GEN-LAST:event_RemoveButtonActionPerformed
+
+    private void RunButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RunButtonActionPerformed
+        if (ProcessesList.getSelectedValue() != null) {
+            so.ejecutarProceso(Integer.parseInt(ProcessesList.getSelectedValue().substring(8)), 0);
+        }
+        refreshLists();
+    }//GEN-LAST:event_RunButtonActionPerformed
+
+    private void NextPageButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NextPageButtonActionPerformed
+        if (so.siguientePagina()) {
+            ModeloProceso.remove(ProcessesList.getSelectedIndex());
+        }
+        refreshLists();
+    }//GEN-LAST:event_NextPageButtonActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */

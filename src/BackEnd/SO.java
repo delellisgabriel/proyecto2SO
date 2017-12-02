@@ -17,10 +17,13 @@ public class SO {
     private ArrayList<proceso> listaProcesos;
     private ram RAM;
     private disco disco;
-    private int cantMarcos; //leido por popup
+    private procesador intel;
+    private int apuntadorSwap;
 
     public SO(int num) {
+        intel = new procesador();
         ubicadorProcesos = 0;
+        apuntadorSwap = 0;
         listaProcesos = new ArrayList<>();
         RAM = new ram(num);
         disco = new disco();
@@ -60,8 +63,10 @@ public class SO {
         int tamanoDisco = disco.getListaPaginas().size();
         datos[2] = 0;
         for (int i = tamanoDisco; i > 0; i--) {
-            if (disco.getListaPaginas().get(tamanoDisco - i).getNumeroProceso() == numProceso) {
-                datos[2]++;
+            if (disco.getListaPaginas().get(tamanoDisco - i) != null) {
+                if (disco.getListaPaginas().get(tamanoDisco - i).getNumeroProceso() == numProceso) {
+                    datos[2]++;
+                }
             }
         } //Paginas en Memoria Virttual
         if (proceso.isEnEjecucion()) {
@@ -77,23 +82,95 @@ public class SO {
         for (int i = tamanoRAM; i > 0; i--) {
             if (RAM.getListaMarcos().get(i - 1).getPagProceso() != null) {
                 if (RAM.getListaMarcos().get(i - 1).getPagProceso().getNumeroProceso() == selected) {
-                    RAM.getListaMarcos().get(i-1).setPagProceso(null);
+                    RAM.getListaMarcos().get(i - 1).setPagProceso(null);
                 }
             }
         }//Paginas en Memoria Principal
         int tamanoDisco = disco.getListaPaginas().size();
         for (int i = tamanoDisco; i > 0; i--) {
-            if (disco.getListaPaginas().get(i - 1).getNumeroProceso() == selected) {
-                disco.getListaPaginas().remove(i - 1);
+            if (disco.getListaPaginas().get(i - 1) != null) {
+                if (disco.getListaPaginas().get(i - 1).getNumeroProceso() == selected) {
+                    disco.getListaPaginas().remove(i - 1);
+                }
             }
         }
         listaProcesos.set(selected, null);
     }
 
-    public void setCantMarcos(int numero) {
-        this.cantMarcos = numero;
+    public void ejecutarProceso(int numProceso, int pag) {
+        proceso ejecutado = listaProcesos.get(numProceso);
+        if (intel.getEjecutando() != null) {
+            intel.getEjecutando().setEnEjecucion(false);
+        }
+        pagina aBuscar = paginaEnMM(ejecutado, pag);
+        if (aBuscar != null) {
+            swapping(aBuscar);
+        }
+        ejecutado.setEnEjecucion(true);
+        intel.setEjecutando(ejecutado);
+        intel.setPaginaEjecutando(ejecutado.getListaDePaginas().get(ejecutado.getRunOrder().get(pag)));
+        intel.setSecuencia(0);
     }
 
+    public void swapping(pagina entraMM) {
+        //llevar a disco a saleMM
+        pagina saleMM = RAM.getListaMarcos().get(apuntadorSwap).getPagProceso();
+        if (saleMM != null) {
+            disco.getListaPaginas().add(saleMM);
+        }// sacar de disco a entraMM
+        int tamanoDisco = disco.getListaPaginas().size();
+        for (int i = tamanoDisco; i > 0; i--) {
+            pagina pagDisco = disco.getListaPaginas().get(tamanoDisco - i);
+            if (pagDisco == entraMM) {
+                disco.getListaPaginas().remove(tamanoDisco - i);
+                i = 0;
+            }
+        }
+        //meter entraMM
+        RAM.getListaMarcos().get(apuntadorSwap).setPagProceso(entraMM);
+        intel.setPaginaEjecutando(entraMM);
+        apuntadorSwap += 1;
+        apuntadorSwap = apuntadorSwap % RAM.getCantMarcos();
+    }
+
+    public pagina paginaEnMM(proceso ejecutado, int pagina) {
+        pagina primerPagProceso = ejecutado.getListaDePaginas().get(ejecutado.getRunOrder().get(pagina));
+        for (int i = RAM.getCantMarcos(); i > 0; i--) {
+            pagina enRam = RAM.getListaMarcos().get(RAM.getCantMarcos() - i).getPagProceso();
+            if (enRam == primerPagProceso) {
+                return null;
+            }
+        }
+        return primerPagProceso;
+    }
+
+    public boolean siguientePagina() {
+        proceso ejecutando = intel.getEjecutando();
+        if (ejecutando != null) {
+            int pag = intel.getSecuencia();
+            pag += 1;
+            intel.setSecuencia(pag);
+            if (pag < ejecutando.getRunOrder().size()) {
+                pagina nueva = paginaEnMM(ejecutando, ejecutando.getRunOrder().get(pag));
+                if (nueva != null) {
+                    swapping(nueva);
+                } else if (nueva == null) {
+                    nueva = ejecutando.getListaDePaginas().get(ejecutando.getRunOrder().get(pag));
+                }
+                intel.setPaginaEjecutando(nueva);
+                return false;
+            } else {
+                terminateProcess((Integer.parseInt(ejecutando.getNombre().substring(8))));
+                intel.setEjecutando(null);
+                intel.setPaginaEjecutando(null);
+                intel.setSecuencia(0);
+                return true;
+            }
+        }
+        return false;
+    }
+
+// Setter y Getters
     public ArrayList<proceso> getListaProcesos() {
         return listaProcesos;
     }
@@ -124,6 +201,14 @@ public class SO {
 
     public void setUbicadorProcesos(int ubicadorProcesos) {
         this.ubicadorProcesos = ubicadorProcesos;
+    }
+
+    public procesador getIntel() {
+        return intel;
+    }
+
+    public void setIntel(procesador intel) {
+        this.intel = intel;
     }
 
 }
